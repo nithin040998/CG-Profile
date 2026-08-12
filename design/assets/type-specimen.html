@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CG · type specimen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="robot-lib.css">
+<style>
+  :root{
+    --cream:#F8EFDE; --cream-2:#F1E6D2; --hair:rgba(28,26,23,.13);
+    --ink:#1C1A17; --ink-muted:#6B645A;
+    --orange:#F2673A; --orange-text:#B83F18;
+    --dark:#17140F; --dark-fg:#E8DFD0; --dark-muted:#9C9488; --orange-glow:#F2A05A;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);padding:44px 46px 120px;
+       font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+       -webkit-font-smoothing:antialiased}
+
+  .pageTitle{font-size:23px;font-weight:600;letter-spacing:-.028em;margin:0 0 6px}
+  .pageSub{font-size:13.5px;color:var(--ink-muted);margin:0 0 34px;max-width:820px;line-height:1.65}
+
+  .eyebrow{font-size:11px;letter-spacing:.09em;color:var(--ink-muted);
+           display:flex;align-items:center;gap:8px;margin:0 0 10px}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);flex:0 0 auto}
+  h2.sec{font-size:16px;font-weight:600;margin:0 0 3px;letter-spacing:-.015em}
+  .secSub{font-size:12.5px;color:var(--ink-muted);margin:0 0 20px}
+  section{margin-bottom:52px;padding-bottom:34px;border-bottom:1px solid var(--hair)}
+  .note{font-size:12.5px;color:var(--ink-muted);max-width:800px;line-height:1.7;margin-top:18px}
+
+  /* ---- pairing cards ---- */
+  .pair{background:var(--cream-2);border:1px solid var(--hair);border-radius:5px;
+        padding:26px 28px;margin-bottom:16px}
+  .pair.pick{border-color:rgba(242,103,58,.5);box-shadow:0 0 0 1px rgba(242,103,58,.14)}
+  .pairHead{display:flex;justify-content:space-between;align-items:baseline;
+            margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--hair);gap:16px}
+  .pairName{font-size:12.5px;font-weight:600}
+  .pairMeta{font-size:10.5px;color:var(--ink-muted)}
+  .tagPick{font-size:9.5px;color:var(--orange-text);letter-spacing:.06em}
+
+  .A{font-family:Inter,sans-serif}      .Am{font-family:'JetBrains Mono',monospace}
+  .B{font-family:Geist,sans-serif}      .Bm{font-family:'Geist Mono',monospace}
+
+  .lbl{font-size:11px;letter-spacing:.09em;color:var(--ink-muted);margin:0 0 8px}
+  .name{font-size:41px;font-weight:600;letter-spacing:-.035em;line-height:1.02;margin:0 0 6px}
+  .role{font-size:14.5px;color:var(--ink-muted);margin:0 0 16px;letter-spacing:-.005em}
+  .tag{font-size:22px;font-weight:500;letter-spacing:-.022em;line-height:1.28;margin:0 0 18px;max-width:620px}
+  .tag b{color:var(--orange-text);font-weight:500}
+  .body{font-size:14px;line-height:1.68;color:var(--ink);max-width:600px;margin:0 0 16px}
+  .meta{font-size:11px;color:var(--ink-muted);letter-spacing:.02em}
+
+  /* ---- scale ---- */
+  .scaleRow{display:grid;grid-template-columns:88px 62px 1fr;gap:16px;align-items:baseline;
+            padding:11px 0;border-bottom:1px solid var(--hair)}
+  .scaleTok{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-muted)}
+  .scaleVal{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-muted)}
+
+  /* ---- dark ---- */
+  .darkbox{background:var(--dark);color:var(--dark-fg);border-radius:5px;padding:34px 32px}
+  .darkbox .role,.darkbox .meta{color:var(--dark-muted)}
+  .darkbox .lbl{color:var(--dark-muted)}
+  .darkbox .tag b{color:var(--orange-glow)}
+  .darkbox .body{color:var(--dark-fg)}
+
+  /* ---- ui bits ---- */
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+  .btn{font-size:12.5px;font-weight:500;padding:10px 17px;border-radius:3px;border:0;cursor:pointer;
+       font-family:inherit}
+  .btn--p{background:var(--orange);color:var(--ink)}
+  .btn--s{background:var(--ink);color:var(--cream)}
+  .btn--t{background:none;color:var(--ink);border-bottom:1px solid var(--orange);border-radius:0;padding:4px 0}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-muted);
+        border:1px solid var(--hair);padding:5px 9px;border-radius:2px;background:var(--cream)}
+  .tile{background:var(--cream-2);border:1px solid var(--hair);border-radius:4px;padding:18px 20px}
+  .tileN{font-size:31px;font-weight:600;letter-spacing:-.03em;line-height:1}
+  .tileL{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;
+         color:var(--ink-muted);margin-top:8px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .withbot{display:flex;align-items:center;gap:14px}
+</style>
+</head>
+<body>
+
+<h1 class="pageTitle">Type specimen — CG portfolio</h1>
+<p class="pageSub">
+  Two candidate pairings, both set with your real content so you're judging rendered type rather
+  than font names. Same sizes, same colors, same layout — the only variable is the typeface.
+</p>
+
+<!-- ============== PAIRINGS ============== -->
+<section>
+  <p class="eyebrow">01 · the pairing</p>
+  <h2 class="sec">Which sans + mono?</h2>
+  <p class="secSub">Both are grotesque sans + technical mono, matching the TE / Daylight language.</p>
+
+  <!-- A -->
+  <div class="pair pick">
+    <div class="pairHead">
+      <div><span class="pairName">A · Inter + JetBrains Mono</span>
+        <span class="tagPick">← my pick</span></div>
+      <span class="pairMeta">neutral, engineered, huge weight range</span>
+    </div>
+    <p class="lbl Am">engineering manager</p>
+    <p class="name A">Channakeshava Gowda</p>
+    <p class="role A">Engineering Manager · Distributed Systems &amp; Strategic Planning</p>
+    <p class="tag A">I turn ambiguous systems problems into calm teams and platforms that <b>scale</b>.</p>
+    <p class="body A">Led a 12-person cross-functional team through a migration from legacy EC2 to
+      Amazon EKS, serving 5M+ API requests a day at sub-second latency. Designed the WebSocket
+      architecture holding 3,000+ concurrent EV charger connections.</p>
+    <p class="meta Am">mar 2024 — feb 2026 · hero motocorp</p>
+  </div>
+
+  <!-- B -->
+  <div class="pair">
+    <div class="pairHead">
+      <div><span class="pairName">B · Geist + Geist Mono</span></div>
+      <span class="pairMeta">Vercel's family — tighter, more contemporary-technical</span>
+    </div>
+    <p class="lbl Bm">engineering manager</p>
+    <p class="name B">Channakeshava Gowda</p>
+    <p class="role B">Engineering Manager · Distributed Systems &amp; Strategic Planning</p>
+    <p class="tag B">I turn ambiguous systems problems into calm teams and platforms that <b>scale</b>.</p>
+    <p class="body B">Led a 12-person cross-functional team through a migration from legacy EC2 to
+      Amazon EKS, serving 5M+ API requests a day at sub-second latency. Designed the WebSocket
+      architecture holding 3,000+ concurrent EV charger connections.</p>
+    <p class="meta Bm">mar 2024 — feb 2026 · hero motocorp</p>
+  </div>
+
+  <p class="note">
+    <strong>A (Inter + JetBrains Mono)</strong> — Inter is the most neutral, best-hinted UI
+    grotesque available; it disappears and lets the content speak. JetBrains Mono has a slightly
+    wider, warmer character than most monos, which suits the cream base.
+    <strong>B (Geist)</strong> — one designed family for both roles, so sans and mono share
+    skeletons; slightly cooler and more "product". Both are correct — A is warmer, B is tighter.
+  </p>
+</section>
+
+<!-- ============== SCALE ============== -->
+<section>
+  <p class="eyebrow">02 · type scale</p>
+  <h2 class="sec">The scale</h2>
+  <p class="secSub">Tight tracking on display sizes; labels always mono, always tracked open.</p>
+
+  <div class="scaleRow"><span class="scaleTok">display</span><span class="scaleVal">clamp 40–72</span>
+    <span style="font-size:56px;font-weight:600;letter-spacing:-.035em;line-height:1">Channakeshava</span></div>
+  <div class="scaleRow"><span class="scaleTok">h1</span><span class="scaleVal">34px / 600</span>
+    <span style="font-size:34px;font-weight:600;letter-spacing:-.028em">Experience</span></div>
+  <div class="scaleRow"><span class="scaleTok">h2</span><span class="scaleVal">22px / 600</span>
+    <span style="font-size:22px;font-weight:600;letter-spacing:-.02em">Engineering Manager, Evaluationz</span></div>
+  <div class="scaleRow"><span class="scaleTok">h3</span><span class="scaleVal">16px / 600</span>
+    <span style="font-size:16px;font-weight:600;letter-spacing:-.012em">Ownership</span></div>
+  <div class="scaleRow"><span class="scaleTok">lead</span><span class="scaleVal">20px / 500</span>
+    <span style="font-size:20px;font-weight:500;letter-spacing:-.018em">Platforms that scale.</span></div>
+  <div class="scaleRow"><span class="scaleTok">body</span><span class="scaleVal">14px / 400</span>
+    <span style="font-size:14px;line-height:1.68">Built AI agents to automate background verification workflows.</span></div>
+  <div class="scaleRow"><span class="scaleTok">small</span><span class="scaleVal">12.5px / 400</span>
+    <span style="font-size:12.5px;color:var(--ink-muted)">Reduced downtime 20%, improved diagnostics 30%.</span></div>
+  <div class="scaleRow"><span class="scaleTok">label</span><span class="scaleVal">11px mono +.09em</span>
+    <span class="Am" style="font-size:11px;letter-spacing:.09em;color:var(--ink-muted)">experience</span></div>
+  <div class="scaleRow"><span class="scaleTok">micro</span><span class="scaleVal">10px mono +.07em</span>
+    <span class="Am" style="font-size:10px;letter-spacing:.07em;color:var(--ink-muted)">5m+ requests / day</span></div>
+</section>
+
+<!-- ============== UI ============== -->
+<section>
+  <p class="eyebrow">03 · applied</p>
+  <h2 class="sec">Type in the UI</h2>
+  <p class="secSub">Buttons use ink-on-orange (5.60 contrast) — never white on orange.</p>
+
+  <div class="btnrow">
+    <button class="btn btn--p">Get in touch</button>
+    <button class="btn btn--s">Download résumé</button>
+    <button class="btn btn--t">View on GitHub</button>
+  </div>
+
+  <div class="chips" style="margin-top:20px">
+    <span class="chip">golang</span><span class="chip">kubernetes</span>
+    <span class="chip">apache kafka</span><span class="chip">websockets</span>
+    <span class="chip">postgresql</span><span class="chip">terraform</span>
+  </div>
+
+  <div class="tiles" style="margin-top:22px">
+    <div class="tile"><div class="tileN">5M+</div><div class="tileL">api requests / day</div></div>
+    <div class="tile"><div class="tileN">3,000+</div><div class="tileL">concurrent chargers</div></div>
+    <div class="tile"><div class="tileN">20%</div><div class="tileL">downtime reduced</div></div>
+    <div class="tile"><div class="tileN">26</div><div class="tileL">people led</div></div>
+  </div>
+</section>
+
+<!-- ============== DARK ============== -->
+<section style="border:0">
+  <p class="eyebrow">04 · on dark</p>
+  <h2 class="sec">The dark moment</h2>
+  <p class="secSub">One dark section per page, at the highest-impact point.</p>
+
+  <div class="darkbox cg-on-dark">
+    <p class="lbl Am">impact</p>
+    <div class="withbot">
+      <div>
+        <p class="tag A" style="margin-bottom:12px">Numbers that held up in <b>production</b>.</p>
+        <p class="body A" style="max-width:560px">Every figure here came from a system that ran
+          under real load, with real users, and real consequences when it broke.</p>
+      </div>
+      <div data-cg-robot data-size="76" data-expression="thinking" data-idle="breathe"></div>
+    </div>
+    <div class="tiles" style="margin-top:24px">
+      <div class="tile" style="background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1)">
+        <div class="tileN" style="color:var(--dark-fg)">5M+</div>
+        <div class="tileL" style="color:var(--dark-muted)">api requests / day</div></div>
+      <div class="tile" style="background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1)">
+        <div class="tileN" style="color:var(--dark-fg)">3,000+</div>
+        <div class="tileL" style="color:var(--dark-muted)">concurrent chargers</div></div>
+      <div class="tile" style="background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1)">
+        <div class="tileN" style="color:var(--orange-glow)">80%</div>
+        <div class="tileL" style="color:var(--dark-muted)">faster checkout</div></div>
+    </div>
+    <p class="meta Am" style="margin-top:22px">cg6.tech · work@cg6.tech</p>
+  </div>
+</section>
+
+<script src="robot-lib.js"></script>
+</body>
+</html>

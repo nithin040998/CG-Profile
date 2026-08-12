@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CG · robot 3D prototype</title>
+<style>
+  :root{ --cream:#F8EFDE; --ink:#1C1A17; --ink-muted:#6B645A; --orange:#F2673A; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,Inter,sans-serif;padding:36px 40px}
+  h1{font-size:20px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px}
+  .sub{font-size:13px;color:var(--ink-muted);margin:0 0 26px;max-width:720px;line-height:1.6}
+  .eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--ink-muted);display:flex;align-items:center;gap:8px;margin:0 0 14px}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange)}
+  .stage{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+  .cell{background:#F2E7D2;border:1px solid rgba(28,26,23,.12);border-radius:4px;padding:0;overflow:hidden}
+  .cell .cap{font-family:ui-monospace,monospace;font-size:10px;color:var(--ink-muted);
+    padding:8px 11px;border-top:1px solid rgba(28,26,23,.1);letter-spacing:.05em}
+  canvas{display:block}
+  .note{font-size:12.5px;color:var(--ink-muted);max-width:700px;line-height:1.65;margin-top:24px}
+</style>
+</head>
+<body>
+<h1>Robot — 3D prototype</h1>
+<p class="sub">Fixes from feedback: <strong>no long thin antennas</strong> (that was the "ant" read) and
+<strong>glowing eyes restored</strong> (black read as hollow/creepy — the glow is what makes it alive).
+Tall, lanky proportions. Real depth + soft lighting.</p>
+
+<p class="eyebrow">three views · drag to orbit</p>
+<div class="stage">
+  <div class="cell"><div id="v1"></div><div class="cap">front · 3/4 light</div></div>
+  <div class="cell"><div id="v2"></div><div class="cap">profile</div></div>
+  <div class="cell"><div id="v3"></div><div class="cap">small scale test · 64px render</div></div>
+</div>
+
+<p class="note">The eyes are emissive (self-lit) with a soft bloom-ish halo — that single detail is the
+difference between "friendly machine" and "creepy bug". Body is the accent orange; only the eye glow
+is a second color.</p>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.172.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.172.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const CREAM = 0xF2E7D2;
+const ORANGE = 0xF2673A;
+const ORANGE_D = 0xC9481F;
+const EYE = 0x7FE3FF;      // glowing cyan-blue, like the source image
+const DARK = 0x2A2622;
+
+function buildRobot(){
+  const g = new THREE.Group();
+
+  const matBody = new THREE.MeshStandardMaterial({ color: ORANGE, roughness:.55, metalness:.15 });
+  const matDark = new THREE.MeshStandardMaterial({ color: ORANGE_D, roughness:.6, metalness:.2 });
+  const matMetal= new THREE.MeshStandardMaterial({ color: DARK, roughness:.45, metalness:.55 });
+  const matEye  = new THREE.MeshStandardMaterial({ color: EYE, emissive: EYE,
+                    emissiveIntensity: 2.4, roughness:.25 });
+
+  // ---- head: rounded box, TALLER than wide (per source) ----
+  const head = new THREE.Mesh(new THREE.BoxGeometry(1.55, 1.35, 1.15), matBody);
+  head.position.y = 3.15;
+  // soften edges via slight scale on a second pass? keep simple boxy retro look
+  g.add(head);
+
+  // face plate (slightly inset darker panel)
+  const face = new THREE.Mesh(new THREE.BoxGeometry(1.42, 1.0, .06), matDark);
+  face.position.set(0, 3.18, .58);
+  g.add(face);
+
+  // ---- EYES: large, glowing, wide-set ----
+  const eyeGeo = new THREE.SphereGeometry(.3, 32, 32);
+  const eyeL = new THREE.Mesh(eyeGeo, matEye); eyeL.position.set(-.36, 3.22, .64);
+  const eyeR = new THREE.Mesh(eyeGeo, matEye); eyeR.position.set( .36, 3.22, .64);
+  g.add(eyeL, eyeR);
+  // eye halo glow (point lights) — makes them read as lit
+  const gl1 = new THREE.PointLight(EYE, 1.6, 3.2); gl1.position.set(-.36,3.22,.95);
+  const gl2 = new THREE.PointLight(EYE, 1.6, 3.2); gl2.position.set( .36,3.22,.95);
+  g.add(gl1, gl2);
+
+  // ---- SHORT stubby head fins instead of long ant antennas ----
+  const finGeo = new THREE.BoxGeometry(.14, .34, .1);
+  const finL = new THREE.Mesh(finGeo, matMetal); finL.position.set(-.5, 3.95, 0); finL.rotation.z = .18;
+  const finR = new THREE.Mesh(finGeo, matMetal); finR.position.set( .5, 3.95, 0); finR.rotation.z = -.18;
+  g.add(finL, finR);
+
+  // side ear pods
+  const podGeo = new THREE.CylinderGeometry(.17,.17,.14,20);
+  const podL = new THREE.Mesh(podGeo, matMetal); podL.rotation.z = Math.PI/2; podL.position.set(-.83,3.15,0);
+  const podR = new THREE.Mesh(podGeo, matMetal); podR.rotation.z = Math.PI/2; podR.position.set( .83,3.15,0);
+  g.add(podL, podR);
+
+  // ---- neck ----
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.3,16), matMetal);
+  neck.position.y = 2.36; g.add(neck);
+
+  // ---- torso: narrow + tall (lanky) ----
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(1.15, 1.5, .85), matBody);
+  torso.position.y = 1.5; g.add(torso);
+  // chest vent lines
+  for(let i=0;i<3;i++){
+    const v = new THREE.Mesh(new THREE.BoxGeometry(.62,.07,.04), matDark);
+    v.position.set(0, 1.75 - i*.22, .44); g.add(v);
+  }
+
+  // ---- arms: thin ----
+  const armGeo = new THREE.CapsuleGeometry(.1, .95, 6, 12);
+  const armL = new THREE.Mesh(armGeo, matBody); armL.position.set(-.78, 1.5, 0); armL.rotation.z = .07;
+  const armR = new THREE.Mesh(armGeo, matBody); armR.position.set( .78, 1.5, 0); armR.rotation.z = -.07;
+  g.add(armL, armR);
+  const handGeo = new THREE.SphereGeometry(.13, 16, 16);
+  const hL = new THREE.Mesh(handGeo, matMetal); hL.position.set(-.82, .93, 0);
+  const hR = new THREE.Mesh(handGeo, matMetal); hR.position.set( .82, .93, 0);
+  g.add(hL, hR);
+
+  // ---- legs: LONG + thin (the lanky read) ----
+  const legGeo = new THREE.CapsuleGeometry(.115, 1.15, 6, 12);
+  const legL = new THREE.Mesh(legGeo, matMetal); legL.position.set(-.3, .28, 0);
+  const legR = new THREE.Mesh(legGeo, matMetal); legR.position.set( .3, .28, 0);
+  g.add(legL, legR);
+  // feet
+  const footGeo = new THREE.BoxGeometry(.42,.13,.55);
+  const fL = new THREE.Mesh(footGeo, matDark); fL.position.set(-.3,-.36,.07);
+  const fR = new THREE.Mesh(footGeo, matDark); fR.position.set( .3,-.36,.07);
+  g.add(fL, fR);
+
+  return g;
+}
+
+function makeScene(el, w, h, camPos, showControls){
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(CREAM);
+
+  const cam = new THREE.PerspectiveCamera(32, w/h, .1, 100);
+  cam.position.set(...camPos);
+  cam.lookAt(0, 1.7, 0);
+
+  const r = new THREE.WebGLRenderer({ antialias:true });
+  r.setSize(w,h); r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  r.toneMapping = THREE.ACESFilmicToneMapping;
+  r.toneMappingExposure = 1.05;
+  el.appendChild(r.domElement);
+
+  // warm afternoon light (per art direction)
+  scene.add(new THREE.HemisphereLight(0xFFF4E2, 0xE8D9BE, .95));
+  const key = new THREE.DirectionalLight(0xFFE9CF, 2.1);
+  key.position.set(3.2, 5.5, 3.4); key.castShadow = true;
+  key.shadow.mapSize.set(1024,1024);
+  key.shadow.camera.near=.5; key.shadow.camera.far=20;
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xFFD9B8, .5);
+  fill.position.set(-3.5, 2, 2); scene.add(fill);
+
+  const bot = buildRobot();
+  scene.add(bot);
+
+  // ground shadow catcher
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(14,14),
+    new THREE.ShadowMaterial({ opacity:.16 })
+  );
+  ground.rotation.x = -Math.PI/2; ground.position.y = -.43; ground.receiveShadow = true;
+  scene.add(ground);
+
+  if(showControls){
+    const c = new OrbitControls(cam, r.domElement);
+    c.target.set(0,1.7,0); c.enableDamping = true; c.dampingFactor=.08;
+    c.minDistance=4; c.maxDistance=18;
+    return { scene, cam, r, bot, controls:c };
+  }
+  return { scene, cam, r, bot };
+}
+
+const views = [
+  makeScene(document.getElementById('v1'), 420, 460, [3.2, 3.4, 7.2], true),
+  makeScene(document.getElementById('v2'), 300, 460, [7.6, 2.6, .6], true),
+  makeScene(document.getElementById('v3'), 200, 200, [2.4, 3.0, 6.4], false),
+];
+
+let t = 0;
+function loop(){
+  t += .016;
+  views.forEach((v,i)=>{
+    // slow idle float + gentle sway
+    v.bot.position.y = Math.sin(t*1.1)*.06;
+    v.bot.rotation.y = Math.sin(t*.45)*.12 + (i===1 ? Math.PI/2*0 : 0);
+    if(v.controls) v.controls.update();
+    v.r.render(v.scene, v.cam);
+  });
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

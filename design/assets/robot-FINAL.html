@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CG · robot v10 — soft smile, curve morph only</title>
+<style>
+  :root{--cream:#F8EFDE;--cream-2:#F1E6D2;--ink:#1C1A17;--ink-muted:#6B645A;
+        --orange:#F2673A;--orange-deep:#C9481F;--hair:rgba(28,26,23,.13);--bolt:#241A12;
+        --mouth:rgba(25,21,18,.42)}   /* one soft shade — never changes */
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,Inter,sans-serif;padding:42px 44px 100px}
+  h1{font-size:21px;font-weight:600;letter-spacing:-.025em;margin:0 0 5px}
+  .sub{font-size:13px;color:var(--ink-muted);margin:0 0 28px;max-width:800px;line-height:1.6}
+  .eyebrow{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.09em;
+    color:var(--ink-muted);display:flex;align-items:center;gap:8px;margin:0 0 8px}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange)}
+  h2{font-size:15px;font-weight:600;margin:0 0 15px}
+  section{margin-bottom:46px;padding-bottom:30px;border-bottom:1px solid var(--hair)}
+  .note{font-size:12.5px;color:var(--ink-muted);max-width:770px;line-height:1.65;margin-top:16px}
+  code{font-family:ui-monospace,monospace;font-size:11.5px;background:var(--cream-2);padding:1px 5px;border-radius:2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:15px}
+  .card{background:var(--cream-2);border:1px solid var(--hair);border-radius:4px;padding:18px 12px 12px;text-align:center}
+  .card.hl{border-color:rgba(242,103,58,.55)}
+  .card .nm{font-family:ui-monospace,monospace;font-size:10.5px;margin-top:13px}
+  .card .d{font-size:9.5px;color:var(--ink-muted);margin-top:3px;line-height:1.4}
+  .card svg{margin:0 auto;display:block;overflow:visible}
+  .big{background:var(--cream-2);border:1px solid var(--hair);border-radius:5px;padding:34px;
+       display:flex;gap:48px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .darkbox{background:#17140F;border-radius:5px;padding:26px 30px;display:flex;gap:34px;align-items:center;flex-wrap:wrap}
+  .lbl2{font-family:ui-monospace,monospace;font-size:10.5px;color:#9C9488}
+  .cap{font-family:ui-monospace,monospace;font-size:9.5px;color:var(--ink-muted);margin-top:8px;text-align:center}
+  .row{display:flex;gap:26px;align-items:flex-end;justify-content:center;flex-wrap:wrap}
+  .hoverMe{cursor:pointer}
+
+  @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+  .fl{animation:fl 4.4s ease-in-out infinite}
+  @keyframes lidDown{0%,92%,100%{transform:translateY(-10px)}95%,97.5%{transform:translateY(0)}}
+  .lid{animation:lidDown 5.2s ease-in-out infinite}
+  @keyframes strikeC{0%,100%{opacity:0}5%{opacity:1}10%{opacity:.25}15%{opacity:1}22%{opacity:0}
+                     56%{opacity:0}59%{opacity:1}63%{opacity:.2}67%{opacity:1}74%{opacity:0}}
+  .boltC{animation:strikeC 2.8s linear infinite}
+
+  /* ---------- MOUTH: constant soft shade. Only the CURVE changes. ---------- */
+  .mouth{fill:none;stroke:var(--mouth);stroke-width:1.6;stroke-linecap:round;
+         transition:d .42s cubic-bezier(.3,.7,.2,1)}
+  /* morph on hover: subtle content-smile → warm smile */
+  .lit .mouth{d:path("M17.6 34.7 q4.4 2.2 8.8 0")}
+
+  /* looping demo of the morph */
+  @keyframes curveLoop{
+    0%,22%   {d:path("M18.0 34.9 q4.0 0.9 8.0 0")}
+    42%,80%  {d:path("M17.6 34.7 q4.4 2.2 8.8 0")}
+    96%,100% {d:path("M18.0 34.9 q4.0 0.9 8.0 0")}
+  }
+  .demoLoop .mouth{animation:curveLoop 3.8s ease-in-out infinite}
+
+  @media (prefers-reduced-motion:reduce){
+    .fl,.lid,.boltC,.demoLoop .mouth{animation:none!important}
+    .boltC{opacity:.9}.lid{transform:translateY(-10px)}
+    .mouth{transition:none}
+  }
+  .Bf{fill:var(--bolt)}.BfL{fill:#F6E7CE}
+</style>
+</head>
+<body>
+
+<h1>Robot v10 — soft smile, curve only</h1>
+<p class="sub">
+  No more progress-bar fill. The mouth is <strong>one constant soft shade</strong>
+  (<code>rgba(25,21,18,.42)</code>) that is <em>always</em> there — it only <strong>changes curve</strong>.
+  Neutral/focused already carry a gentle content-smile; on interaction it curves a little warmer.
+  Nothing darkens.
+</p>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#F87A4B"/><stop offset="100%" stop-color="#E85A2C"/></linearGradient>
+  <linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#C9481F"/><stop offset="100%" stop-color="#E05C2A"/></linearGradient>
+  <radialGradient id="lens" cx="34%" cy="28%" r="78%">
+    <stop offset="0%" stop-color="#5B5049"/><stop offset="38%" stop-color="#2E2823"/><stop offset="100%" stop-color="#100E0C"/></radialGradient>
+  <radialGradient id="socket" cx="50%" cy="50%" r="50%">
+    <stop offset="62%" stop-color="#8E3413" stop-opacity="0"/><stop offset="100%" stop-color="#7A2A0E" stop-opacity=".5"/></radialGradient>
+
+  <g id="head">
+    <path d="M13.5 13 L10.5 3" stroke="#C9481F" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M30.5 13 L33.5 3" stroke="#C9481F" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <circle cx="10.5" cy="2.4" r="1.9" fill="#F2673A"/><circle cx="33.5" cy="2.4" r="1.9" fill="#F2673A"/>
+    <rect x="5" y="13" width="34" height="28" rx="5.5" fill="url(#bodyGrad)"/>
+    <rect x="8" y="16.5" width="28" height="14" rx="3" fill="url(#plateGrad)"/>
+    <rect x="2.2" y="22" width="3" height="9" rx="1.3" fill="#C9481F"/>
+    <rect x="38.8" y="22" width="3" height="9" rx="1.3" fill="#C9481F"/>
+  </g>
+  <clipPath id="clipL"><circle cx="15.5" cy="23.5" r="4.2"/></clipPath>
+  <clipPath id="clipR"><circle cx="28.5" cy="23.5" r="4.2"/></clipPath>
+  <g id="eN">
+    <circle cx="15.5" cy="23.5" r="4.2" fill="url(#lens)"/><circle cx="15.5" cy="23.5" r="4.2" fill="url(#socket)"/>
+    <circle cx="14.1" cy="22.1" r="1.25" fill="#FFF4EC" opacity=".92"/>
+    <circle cx="28.5" cy="23.5" r="4.2" fill="url(#lens)"/><circle cx="28.5" cy="23.5" r="4.2" fill="url(#socket)"/>
+    <circle cx="27.1" cy="22.1" r="1.25" fill="#FFF4EC" opacity=".92"/>
+  </g>
+  <g id="eFoc">
+    <rect x="11.4" y="22" width="8.4" height="3.4" rx="1.7" fill="url(#lens)"/>
+    <rect x="24.4" y="22" width="8.4" height="3.4" rx="1.7" fill="url(#lens)"/>
+  </g>
+  <g id="boltV"><path class="Bf" d="M23.6 -9.4 L17.8 -2.4 L21.2 -2.4 L19.4 3.0 L26.0 -4.6 L22.4 -4.6 Z"/></g>
+  <g id="boltVL"><path class="BfL" d="M23.6 -9.4 L17.8 -2.4 L21.2 -2.4 L19.4 3.0 L26.0 -4.6 L22.4 -4.6 Z"/></g>
+</defs></svg>
+
+<!-- ============ 01 RESTING SMILE ============ -->
+<section>
+  <p class="eyebrow">01</p>
+  <h2>Every state has a soft smile already — same shade throughout</h2>
+  <div class="grid">
+    <div class="card hl">
+      <svg class="fl" width="102" height="110" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+        <path class="mouth" d="M18.0 34.9 q4.0 0.9 8.0 0" style="transition:none"/>
+      </svg>
+      <div class="nm">neutral</div><div class="d">gentle content-smile</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="102" height="110" viewBox="0 0 44 45"><use href="#head"/><use href="#eFoc"/>
+        <path class="mouth" d="M18.2 34.9 q3.8 0.8 7.6 0" style="transition:none"/>
+      </svg>
+      <div class="nm">focused</div><div class="d">still smiling, tighter</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="102" height="110" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+        <path class="mouth" d="M17.6 34.7 q4.4 2.2 8.8 0" style="transition:none"/>
+      </svg>
+      <div class="nm">happy</div><div class="d">warmer curve, same shade</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="102" height="110" viewBox="0 0 44 45"><use href="#head"/>
+        <g><path d="M11.9 23.7 h7.6" stroke="#191512" stroke-width="3.2" stroke-linecap="round"/>
+           <path d="M24.9 23.7 h7.6" stroke="#191512" stroke-width="3.2" stroke-linecap="round"/></g>
+        <path class="mouth" d="M17.7 34.7 q4.3 2.0 8.6 0" style="transition:none"/>
+      </svg>
+      <div class="nm">content</div><div class="d">eyes closed + smile</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="102" height="110" viewBox="0 0 44 45" style="transform:rotate(-6deg)"><use href="#head"/>
+        <circle cx="15.3" cy="23.3" r="5" fill="url(#lens)"/><circle cx="13.4" cy="21.4" r="1.45" fill="#FFF4EC"/>
+        <rect x="24.9" y="22.1" width="7.6" height="3.2" rx="1.6" fill="#191512"/>
+        <path class="mouth" d="M18.6 34.8 q3.4 1.7 6.8 .3" style="transition:none"/>
+      </svg>
+      <div class="nm">curious</div><div class="d">slightly lopsided</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="102" height="126" viewBox="0 -9 44 54"><use href="#head"/><use href="#eFoc"/>
+        <path class="mouth" d="M18.6 34.9 q3.4 0.7 6.8 0" style="transition:none"/>
+        <g class="boltC"><use href="#boltV"/></g>
+      </svg>
+      <div class="nm">thinking ⚡</div><div class="d">small, still soft</div>
+    </div>
+  </div>
+  <p class="note">
+    One shade — <code>rgba(25,21,18,.42)</code> — used in <em>every</em> state. The robot is never
+    "smile off"; it just smiles a little more or less. That's what keeps it warm rather than mechanical.
+  </p>
+</section>
+
+<!-- ============ 02 THE MORPH ============ -->
+<section>
+  <p class="eyebrow">02</p>
+  <h2>The interaction is a curve morph, not a fill</h2>
+  <div class="grid">
+    <div class="card demoLoop">
+      <svg class="fl" width="108" height="116" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+        <path class="mouth" d="M18.0 34.9 q4.0 0.9 8.0 0"/>
+      </svg>
+      <div class="nm">auto loop</div><div class="d">content ⇄ warm</div>
+    </div>
+    <div class="card hoverMe smileHover">
+      <svg class="fl" width="108" height="116" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+        <path class="mouth" d="M18.0 34.9 q4.0 0.9 8.0 0"/>
+      </svg>
+      <div class="nm">hover me</div><div class="d">curve deepens smoothly</div>
+    </div>
+    <div class="card">
+      <svg class="fl" width="108" height="116" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+        <path class="mouth" d="M18.0 34.9 q4.0 0.9 8.0 0" style="transition:none"/>
+      </svg>
+      <div class="nm">resting only</div><div class="d">no interaction</div>
+    </div>
+  </div>
+  <p class="note">
+    The curve control point animates from <code>q4.0 0.9</code> → <code>q4.4 2.2</code> over
+    <code>.42s</code>. Stroke colour and width never change — so it reads as an expression shifting,
+    not a bar loading.
+  </p>
+</section>
+
+<!-- ============ 03 EVERYTHING ============ -->
+<section>
+  <p class="eyebrow">03</p>
+  <h2>Everything together — hover the panel</h2>
+  <div class="big" id="stage" style="cursor:crosshair;min-height:250px">
+    <div id="wrap">
+      <svg id="bot" width="150" height="182" viewBox="0 -9 44 54" style="overflow:visible;transition:transform .22s ease-out">
+        <use href="#head"/>
+        <circle cx="15.5" cy="23.5" r="4.2" fill="#120F0D"/>
+        <g class="pL"><circle cx="15.5" cy="23.5" r="2.9" fill="url(#lens)"/><circle cx="14.4" cy="22.4" r="1.15" fill="#FFF4EC" opacity=".95"/></g>
+        <circle cx="15.5" cy="23.5" r="4.2" fill="url(#socket)"/>
+        <circle cx="28.5" cy="23.5" r="4.2" fill="#120F0D"/>
+        <g class="pR"><circle cx="28.5" cy="23.5" r="2.9" fill="url(#lens)"/><circle cx="27.4" cy="22.4" r="1.15" fill="#FFF4EC" opacity=".95"/></g>
+        <circle cx="28.5" cy="23.5" r="4.2" fill="url(#socket)"/>
+        <g clip-path="url(#clipL)"><rect class="lid" x="10" y="18.3" width="11" height="9" fill="#E85A2C"/></g>
+        <g clip-path="url(#clipR)"><rect class="lid" x="23" y="18.3" width="11" height="9" fill="#E85A2C"/></g>
+        <g id="mouthG" style="transition:transform .2s ease-out">
+          <path class="mouth" id="mouth" d="M18.0 34.9 q4.0 0.9 8.0 0"/>
+        </g>
+        <g id="bolt" style="opacity:0"><use href="#boltV"/></g>
+      </svg>
+      <div class="cap">always smiling · curve warms on hover · mouth drifts with gaze</div>
+    </div>
+    <div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--ink-muted);line-height:1.95">
+      ● smile always present, one shade<br>
+      ● curve deepens on interaction<br>
+      ● mouth drifts with gaze (40%)<br>
+      ● pupils track cursor<br>
+      ● blinks every 5.2s
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 SIZES + DARK ============ -->
+<section style="border:0">
+  <p class="eyebrow">04</p>
+  <h2>Sizes &amp; dark surface</h2>
+  <div class="row">
+    <div><svg width="56" height="60" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M17.8 34.8 q4.2 1.6 8.4 0" style="transition:none"/></svg><div class="cap">56</div></div>
+    <div><svg width="40" height="43" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M17.8 34.8 q4.2 1.6 8.4 0" style="stroke-width:1.8;transition:none"/></svg><div class="cap">40</div></div>
+    <div><svg width="30" height="32" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M17.8 34.8 q4.2 1.6 8.4 0" style="stroke-width:2.1;transition:none"/></svg><div class="cap">30</div></div>
+    <div><svg width="22" height="24" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M18.0 34.8 q4.0 1.6 8.0 0" style="stroke-width:2.5;transition:none"/></svg><div class="cap">22</div></div>
+    <div><svg width="17" height="18" viewBox="0 0 44 45"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M18.2 34.9 q3.8 1.6 7.6 0" style="stroke-width:2.9;transition:none"/></svg><div class="cap">17</div></div>
+  </div>
+  <p class="note" style="margin-bottom:20px">Stroke thickens as size drops so the curve still reads,
+  but the <em>shade</em> stays identical at every size.</p>
+
+  <div class="darkbox">
+    <svg class="fl" width="64" height="78" viewBox="0 -9 44 54"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M17.8 34.8 q4.2 1.6 8.4 0" style="transition:none"/>
+      <g class="boltC"><use href="#boltVL"/></g>
+    </svg>
+    <svg class="fl" width="44" height="54" viewBox="0 -9 44 54"><use href="#head"/><use href="#eN"/>
+      <path class="mouth" d="M17.8 34.8 q4.2 1.6 8.4 0" style="stroke-width:1.8;transition:none"/>
+    </svg>
+    <span class="lbl2">on dark — mouth keeps the SAME shade (it sits on the orange face)</span>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.smileHover').forEach(c=>{
+  c.addEventListener('mouseenter',()=>c.classList.add('lit'));
+  c.addEventListener('mouseleave',()=>c.classList.remove('lit'));
+});
+
+const stage=document.getElementById('stage'), bot=document.getElementById('bot'), wrap=document.getElementById('wrap');
+const pL=bot.querySelector('.pL'), pR=bot.querySelector('.pR');
+const mouthG=document.getElementById('mouthG'), mouth=document.getElementById('mouth');
+const bolt=document.getElementById('bolt');
+const MAX=1.25, RATIO=.4;
+const REST='M18.0 34.9 q4.0 0.9 8.0 0';
+const WARM='M17.6 34.7 q4.4 2.2 8.8 0';
+
+stage.addEventListener('mousemove',e=>{
+  const r=bot.getBoundingClientRect();
+  let dx=(e.clientX-(r.left+r.width/2))/(r.width/2);
+  let dy=(e.clientY-(r.top+r.height/2))/(r.height/2);
+  const m=Math.hypot(dx,dy)||1; if(m>1){dx/=m;dy/=m;}
+  const t=`translate(${(dx*MAX).toFixed(2)} ${(dy*MAX).toFixed(2)})`;
+  pL.setAttribute('transform',t); pR.setAttribute('transform',t);
+  mouthG.style.transform=`translate(${(dx*MAX*RATIO).toFixed(2)}px, ${(dy*MAX*RATIO*.6).toFixed(2)}px)`;
+  bot.style.transform=`rotate(${dx*5}deg)`;
+});
+stage.addEventListener('mouseenter',()=>{
+  mouth.setAttribute('d',WARM);
+  bolt.style.opacity=''; bolt.classList.add('boltC');
+});
+stage.addEventListener('mouseleave',()=>{
+  mouth.setAttribute('d',REST);
+  bolt.classList.remove('boltC'); bolt.style.opacity='0';
+  pL.removeAttribute('transform'); pR.removeAttribute('transform');
+  mouthG.style.transform=''; bot.style.transform='';
+});
+</script>
+</body>
+</html>

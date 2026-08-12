@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CG Portfolio — Phase I Wireframes (greybox)</title>
+<style>
+/* ============================================================
+   PHASE I GREYBOX
+   Structure only. Deliberately colourless — this proves the
+   grid (G) and the layout (I), not the palette (E) or type (F).
+   Greys stand in for cream/ink; the one orange mark is kept
+   because its placement IS a structural decision.
+   ============================================================ */
+:root{
+  /* G tokens — real values */
+  --page-max:1200px; --page-pad:clamp(20px,5vw,64px);
+  --measure:600px;   --measure-lead:620px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
+  --gutter:24px; --r-1:3px; --r-2:6px; --r-3:10px;
+
+  /* greybox stand-ins */
+  --bg:#EDEDEA; --bg-2:#E4E4E0;
+  --hair:rgba(0,0,0,.14); --hair-dark:rgba(255,255,255,.16);
+  --fg:#262624; --fg-muted:#77776F;
+  --dark:#22211E; --dark-fg:#E6E6E2; --dark-muted:#96968E;
+  --mark:#F2673A;               /* the one orange: placement is structural */
+  --box:rgba(0,0,0,.055);       /* content-block fill */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:400 14px/1.68 ui-sans-serif,system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- container + grid (G) ---------- */
+.container{width:100%;max-width:var(--page-max);margin-inline:auto;padding-inline:var(--page-pad)}
+.grid{display:grid;gap:var(--gutter);grid-template-columns:repeat(12,minmax(0,1fr))}
+@media (max-width:1023px){.grid{gap:20px;grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:639px){.grid{gap:16px;grid-template-columns:1fr}}
+.section{padding-block:clamp(64px,10vw,128px)}
+.section--dark{background:var(--dark);color:var(--dark-fg);padding-block:clamp(88px,12vw,160px)}
+.section--dark .eyebrow{color:var(--dark-fg)}
+.section--dark .lead,.section--dark .body{color:var(--dark-muted)}
+
+/* ---------- greybox annotation chrome ---------- */
+.gb-note{
+  font:400 10px/1.4 ui-monospace,monospace; letter-spacing:.07em;
+  color:var(--fg-muted); text-transform:lowercase; margin-top:var(--s-2);
+}
+.gb-col{ /* column ruler, toggled */
+  position:fixed;inset:0;pointer-events:none;z-index:99;display:none;
+}
+.gb-col.on{display:block}
+.gb-col .container,.gb-col .grid{height:100%}
+.gb-col i{background:rgba(242,103,58,.07);border-inline:1px solid rgba(242,103,58,.16)}
+.gb-toggle{
+  position:fixed;right:16px;bottom:16px;z-index:100;
+  font:400 10px/1 ui-monospace,monospace;letter-spacing:.08em;
+  background:var(--fg);color:var(--bg);border:0;border-radius:var(--r-1);
+  padding:10px 12px;cursor:pointer;
+}
+
+/* ---------- primitives ---------- */
+.eyebrow{
+  position:relative;padding-left:14px;
+  font:400 11px/1 ui-monospace,monospace;letter-spacing:.09em;color:var(--fg-muted);
+  margin:0 0 var(--s-3);
+}
+.eyebrow::before{ /* optical: dot hangs outside the column (G) */
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--mark);
+}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.16}   /* headings never inherit --leading-body */
+h1{font-size:34px;letter-spacing:-.02em;max-width:16ch}
+h2{font-size:22px;letter-spacing:-.02em}
+h3{font-size:16px;letter-spacing:-.012em;line-height:1.3}
+.display{font-size:clamp(40px,7vw,72px);font-weight:600;letter-spacing:-.03em;line-height:1.02;margin:0}
+.lead{font-size:21px;font-weight:500;letter-spacing:-.02em;max-width:var(--measure-lead);margin:0}
+.body{max-width:var(--measure);color:var(--fg-muted)}
+.label{font:400 11px/1 ui-monospace,monospace;letter-spacing:.09em;color:var(--fg-muted)}
+.micro{font:400 10px/1.5 ui-monospace,monospace;letter-spacing:.07em;color:var(--fg-muted)}
+.hair{border:1px solid var(--hair);border-radius:var(--r-2)}
+.section--dark .hair{border-color:var(--hair-dark)}
+.rule{border:0;border-top:1px solid var(--hair);margin:0}
+.section--dark .rule{border-top-color:var(--hair-dark)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  padding:0 18px;border-radius:var(--r-1);font-size:13px;font-weight:500;
+  text-decoration:none;border:1px solid transparent;cursor:pointer;
+  white-space:nowrap;flex:0 0 auto;
+  transition:background 200ms cubic-bezier(.2,.7,.2,1),border-color 120ms cubic-bezier(.2,.7,.2,1);
+}
+.btn--1{background:var(--mark);color:#1C1A17}          /* ink on orange (E) */
+.btn--2{background:var(--fg);color:var(--bg)}
+.btn--3{background:transparent;color:var(--fg);border-color:var(--hair)}
+.btn:focus-visible{outline:2px solid #B83F18;outline-offset:2px}  /* H: orange-text on light */
+
+/* robot stand-in */
+.bot{
+  display:grid;place-items:center;background:var(--box);
+  border:1px dashed var(--hair);border-radius:var(--r-3);
+  font:400 10px/1.4 ui-monospace,monospace;letter-spacing:.06em;
+  color:var(--fg-muted);text-align:center;aspect-ratio:1;
+}
+.section--dark .bot{background:rgba(255,255,255,.05);border-color:var(--hair-dark);color:var(--dark-muted)}
+
+/* tiles */
+.tile{background:var(--box);border:1px solid var(--hair);border-radius:var(--r-2);padding:var(--s-5)}
+.section--dark .tile{background:transparent;border-color:var(--hair-dark)}
+.tile .fig{font-size:clamp(31px,4vw,40px);font-weight:600;letter-spacing:-.03em;line-height:1}
+.tile .cap{margin-top:var(--s-3)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-4)}
+.chip{
+  font:400 10px/1 ui-monospace,monospace;letter-spacing:.07em;color:var(--fg-muted);
+  border:1px solid var(--hair);border-radius:var(--r-1);padding:7px 9px;
+}
+
+/* ---------- 0 nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:center;
+  background:transparent;transition:background 200ms,border-color 200ms;
+  border-bottom:1px solid transparent;
+}
+.nav.is-stuck{background:rgba(237,237,234,.88);backdrop-filter:blur(8px);border-bottom-color:var(--hair)}
+.nav .inner{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);width:100%}
+.nav .wm{font-weight:600;letter-spacing:-.02em;font-size:15px}
+.nav ul{display:flex;gap:var(--s-5);list-style:none;margin:0;padding:0}
+.nav a{color:var(--fg-muted);text-decoration:none;position:relative;padding:6px 0;display:inline-block;min-height:44px;line-height:32px}
+.nav a[aria-current="true"]{color:var(--fg);padding-left:12px}
+.nav a[aria-current="true"]::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--mark);
+}
+.nav .menu{display:none}
+@media (max-width:1023px){ .nav ul{display:none} .nav .menu{display:inline-block} }
+
+/* ---------- 1 hero ---------- */
+.hero{min-height:88vh;display:flex;align-items:center;padding-block:var(--s-9) var(--s-8)}
+.hero .grid{align-items:center;width:100%}
+
+/* ── the hero composition (I / DECISIONS #5): giant name BEHIND, robot IN FRONT ──
+   The name is the full-width layer. The robot is absolutely positioned over its
+   right end so the two genuinely overlap — that overlap is the composition. Side
+   by side, it reads as two boxes; overlapped, it reads as one image. */
+.hero-name{grid-column:1/13;position:relative}
+.hero-name .display{
+  font-size:clamp(40px,10.5vw,124px);   /* big enough to REACH the robot */
+  position:relative;z-index:1;margin:0;
+}
+.hero-bot{
+  position:absolute;z-index:2;
+  right:0; bottom:-8%;                  /* crosses the name's right end + baseline */
+  width:clamp(140px,19vw,260px);
+}
+.hero-bot .bot{width:100%}
+.hero-bot .gb-note{text-align:right}
+/* copy sits below the name layer, capped so it never runs under the robot */
+.hero-copy{grid-column:1/9;position:relative;z-index:3;margin-top:var(--s-7)}
+.hero .lead{margin-bottom:var(--s-7);max-width:min(var(--measure-lead),100%)}
+.mark-word{color:#B83F18;font-weight:600}                   /* orange-text: passes on light */
+.cta{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-7)}
+.meta{display:flex;gap:var(--s-3);flex-wrap:wrap;align-items:center}
+.meta span:not(:last-child)::after{content:" ·";color:var(--hair)}
+@media (max-width:1023px){
+  /* md/sm: robot moves ABOVE the copy (I) — the overlap is a desktop composition */
+  .hero .grid{position:relative}
+  .hero-name{grid-column:1/7;grid-row:2}
+  .hero-name .display{font-size:clamp(34px,9vw,60px)}
+  .hero-bot{position:static;grid-column:1/7;grid-row:1;
+    width:200px;margin:0 auto var(--s-6);justify-self:center}
+  .hero-bot .gb-note{text-align:center}
+  .hero-copy{grid-column:1/7;grid-row:3}
+}
+@media (max-width:639px){
+  .hero-bot{width:140px}
+  .cta{flex-direction:column;align-items:stretch}
+}
+
+/* ---------- 2 about ---------- */
+.about-rail{grid-column:1/4}
+.about-body{grid-column:4/12}
+.about-rail .bot{max-width:96px;margin-top:var(--s-7)}
+.about-body .lead{margin-bottom:var(--s-5)}
+.thru{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-4);margin-top:var(--s-7)}
+@media (max-width:1023px){
+  .about-rail,.about-body{grid-column:1/7}
+  .about-body{margin-top:var(--s-7)}
+}
+@media (max-width:639px){ .thru{grid-template-columns:1fr} }
+
+/* ---------- 3 experience ---------- */
+.xp{margin-top:var(--s-8)}
+.xp-row{position:relative}
+.xp-row + .xp-row{margin-top:var(--s-9)}
+.xp-meta{grid-column:1/4}
+.xp-main{grid-column:4/13;position:relative}
+/* the spine: 1px hairline in the col3/col4 gutter */
+.xp-main::before{
+  content:"";position:absolute;left:calc(var(--gutter) / -2);top:6px;bottom:calc(var(--s-9) * -1);
+  border-left:1px solid var(--hair);
+}
+.xp-row:last-child .xp-main::before{bottom:auto;height:100%}
+.xp-main::after{ /* the dot */
+  content:"";position:absolute;left:calc(var(--gutter) / -2 - 3.5px);top:6px;
+  width:8px;height:8px;border-radius:50%;background:var(--mark);
+}
+.xp-main h2{margin-bottom:var(--s-1)}
+.xp-co{color:var(--fg-muted);margin:0 0 var(--s-4)}
+.xp-main ul{margin:0;padding-left:18px;max-width:var(--measure)}
+.xp-main li{margin-bottom:var(--s-2)}
+.own{display:inline-block;margin-top:var(--s-4)}
+.xp-bot{grid-column:1/4;margin-top:var(--s-5)}
+.xp-bot .bot{max-width:72px}
+@media (max-width:1023px){
+  .xp-meta,.xp-main{grid-column:1/7}
+  .xp-main{margin-top:var(--s-4);padding-left:20px}
+  .xp-main::before{left:0;top:0;bottom:calc(var(--s-9) * -1)}
+  .xp-main::after{left:-3.5px;top:0}
+}
+
+/* ---------- 4 impact ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-4);margin-top:var(--s-8)}
+.impact-head{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s-5)}
+.impact-head .bot{width:120px;flex:0 0 120px}
+.skills{margin-top:var(--s-9)}
+/* 5 groups in 2 cols orphans the last one. 3 cols on wide: 3 + 2 reads as
+   deliberate, and the trailing empty cell is the G asymmetry again. */
+.skill-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-7) var(--gutter);margin-top:var(--s-7)}
+.skill-grid h3{font-size:11px;font-family:ui-monospace,monospace;letter-spacing:.09em;font-weight:400;color:var(--dark-fg);margin-bottom:var(--s-3)}
+.skill-grid p{margin:0;color:var(--dark-muted);font-size:13px}
+@media (max-width:1023px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .skill-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .impact-head{flex-direction:column-reverse;align-items:flex-start}
+  .impact-head .bot{margin-bottom:var(--s-5)}
+}
+@media (max-width:639px){ .skill-grid{grid-template-columns:1fr} }
+@media (max-width:639px){ .stats{grid-template-columns:1fr} }
+
+/* ---------- 5 contact ---------- */
+.ct-pitch{grid-column:1/7}
+.ct-chan{grid-column:7/13}
+.ct-pitch h1{margin-bottom:var(--s-4)}
+.ct-pitch .cta{margin-top:var(--s-7);margin-bottom:0}
+.chan{border:1px solid var(--hair);border-radius:var(--r-2);overflow:hidden}
+.chan a{
+  display:flex;align-items:center;gap:var(--s-5);min-height:52px;padding:0 var(--s-5);
+  text-decoration:none;color:var(--fg);transition:border-color 120ms;
+}
+.chan a + a{border-top:1px solid var(--hair)}
+.chan .k{flex:0 0 74px;font:400 10px/1 ui-monospace,monospace;letter-spacing:.07em;color:var(--fg-muted)}
+.signoff{margin-top:var(--s-9);text-align:center}
+.signoff .bot{width:96px;margin:0 auto var(--s-4)}
+@media (max-width:1023px){ .ct-pitch,.ct-chan{grid-column:1/7} .ct-chan{margin-top:var(--s-7)} }
+
+/* ---------- H: reveal ---------- */
+.reveal{opacity:0;transform:translateY(14px);
+  transition:opacity 340ms cubic-bezier(.2,.7,.2,1),transform 340ms cubic-bezier(.2,.7,.2,1)}
+.reveal.is-in{opacity:1;transform:none}
+.reveal--stagger > *{transition-delay:calc(var(--i,0) * 60ms)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  .reveal--stagger > *{transition-delay:0ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- column ruler overlay -->
+<div class="gb-col" id="ruler"><div class="container"><div class="grid">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div></div></div>
+<button class="gb-toggle" id="rulerBtn">show grid</button>
+
+<!-- ═══════════ 0 · NAV ═══════════ -->
+<header class="nav" id="nav">
+  <div class="container inner">
+    <a class="wm" href="#top" style="text-decoration:none;color:inherit">CG</a>
+    <ul class="mono" style="font-size:11px;letter-spacing:.09em">
+      <li><a href="#about" aria-current="true">about</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#impact">impact</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <div style="display:flex;gap:var(--s-3);align-items:center">
+      <span class="label menu">menu</span>
+      <a class="btn btn--3" href="#">résumé</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ 1 · HERO ═══════════ -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="grid">
+      <!-- layer 1: the name, full width, BEHIND -->
+      <div class="hero-name">
+        <p class="eyebrow">engineering manager · bengaluru</p>
+        <h1 class="display">Channakeshava<br>Gowda</h1>
+        <!-- layer 2: the robot, absolutely positioned OVER the name's right end -->
+        <div class="hero-bot">
+          <div class="bot">robot<br>gaze-follow<br>breathe + blink</div>
+          <p class="gb-note">overlaps the name → z-index 2</p>
+        </div>
+      </div>
+      <!-- layer 3: the copy, below -->
+      <div class="hero-copy">
+        <p class="lead">Engineering manager who builds the distributed systems
+          <span class="mark-word">and the teams</span> that run them.</p>
+        <div class="cta">
+          <a class="btn btn--1" href="#experience">view experience</a>
+          <a class="btn btn--2" href="#">download résumé</a>
+        </div>
+        <p class="meta label">
+          <span>5+ yrs</span><span>12-person team</span><span>5M+ req/day</span><span>3,000+ connections</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 2 · ABOUT ═══════════ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="grid">
+      <div class="about-rail reveal">
+        <p class="eyebrow">about</p>
+        <h1>Leads and<br>architects.</h1>
+        <div class="bot">robot 96px<br>content</div>
+      </div>
+      <div class="about-body reveal">
+        <p class="lead">Five years of building systems and the teams that run them.</p>
+        <p class="body">I lead engineering teams and stay in the architecture. Right now that means
+          AI-driven background verification at Evaluationz — agents, real-time visa checks,
+          document intelligence. Before that, 3,000 live EV chargers at Hero MotoCorp.</p>
+        <div class="thru reveal--stagger">
+          <div class="tile" style="--i:0">
+            <p class="label">leads</p>
+            <p class="body" style="margin:var(--s-3) 0 0;font-size:13px">12-person cross-functional team; hired 6, managed 9 role transitions</p>
+          </div>
+          <div class="tile" style="--i:1">
+            <p class="label">architects</p>
+            <p class="body" style="margin:var(--s-3) 0 0;font-size:13px">Golang, Kafka, WebSockets, EKS — real-time systems at scale</p>
+          </div>
+          <div class="tile" style="--i:2">
+            <p class="label">ships</p>
+            <p class="body" style="margin:var(--s-3) 0 0;font-size:13px">EV charger platform, loyalty platforms, 15+ SaaS/fintech MVPs</p>
+          </div>
+        </div>
+        <p class="gb-note">col 12 intentionally empty — the asymmetry (G)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 3 · EXPERIENCE ═══════════ -->
+<section class="section" id="experience">
+  <div class="container">
+    <p class="eyebrow">experience</p>
+    <h1>Trajectory.</h1>
+
+    <div class="xp">
+      <!-- role 1 -->
+      <div class="xp-row grid reveal">
+        <div class="xp-meta">
+          <p class="label">feb 2026 — present</p>
+          <p class="chip own">owned the complete technology function</p>
+        </div>
+        <div class="xp-main">
+          <h2>Engineering Manager · Band 2</h2>
+          <p class="xp-co">Evaluationz India Pvt Ltd</p>
+          <ul class="body">
+            <li>Built AI agents automating background-verification workflows</li>
+            <li>Real-time visa verification via document data extraction</li>
+            <li>Led org restructuring for AI-driven BGV across a 14-member team</li>
+            <li>Hired 4 engineers; managed 6 role transitions</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">golang</span><span class="chip">ai-agents</span>
+            <span class="chip">document-ai</span><span class="chip">kubernetes</span>
+          </div>
+        </div>
+      </div>
+      <!-- role 2 -->
+      <div class="xp-row grid reveal">
+        <div class="xp-meta">
+          <p class="label">mar 2024 — feb 2026</p>
+          <p class="chip own">EV charger platform modernization</p>
+        </div>
+        <div class="xp-main">
+          <h2>Engineering Manager</h2>
+          <p class="xp-co">Hero MotoCorp</p>
+          <ul class="body">
+            <li>Led migration from legacy EC2 to Amazon EKS microservices — 5M+ daily API requests, sub-second latency</li>
+            <li>Designed WebSocket architecture for 3,000+ concurrent charger connections</li>
+            <li>Spearheaded Build-vs-Buy for an in-house Charger Management System with a 5-year business case</li>
+            <li>Observability via Grafana + Dynatrace — downtime −20%, diagnostic accuracy +30%</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">golang</span><span class="chip">kafka</span>
+            <span class="chip">websockets</span><span class="chip">eks</span><span class="chip">grafana</span>
+          </div>
+        </div>
+      </div>
+      <!-- role 3 -->
+      <div class="xp-row grid reveal">
+        <div class="xp-meta">
+          <p class="label">aug 2022 — mar 2024</p>
+          <p class="chip own">product delivery · customer impact</p>
+        </div>
+        <div class="xp-main">
+          <h2>Full Stack Lead</h2>
+          <p class="xp-co">Spurtree Technologies</p>
+          <ul class="body">
+            <li>Real-time analytical dashboards — user engagement +40%, retention +25%</li>
+            <li>Directed end-to-end delivery of loyalty platforms for major retail clients</li>
+            <li>Fault-tolerant notification architecture on AWS SQS — zero data loss at peak</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">angular</span><span class="chip">node.js</span><span class="chip">aws-sqs</span>
+          </div>
+        </div>
+      </div>
+      <!-- role 4 -->
+      <div class="xp-row grid reveal">
+        <div class="xp-meta">
+          <p class="label">jun 2019 — aug 2022</p>
+          <p class="chip own">requirement analysis · zero-to-one</p>
+        </div>
+        <div class="xp-main">
+          <h2>Co-Founder &amp; CTO</h2>
+          <p class="xp-co">Likemindz Solutions</p>
+          <ul class="body">
+            <li>Founded and scaled a technology services firm — roadmap for 15+ SaaS and fintech projects</li>
+            <li>Architected Shopper Space, a multi-mart delivery platform — checkout time −80%; reached final interview stage at Y Combinator</li>
+            <li>Standardized workflows across 15+ projects with OpenAPI specs and microservices patterns</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">openapi</span><span class="chip">microservices</span><span class="chip">mvp-delivery</span>
+          </div>
+        </div>
+      </div>
+      <!-- education as a spine entry, not a section -->
+      <div class="xp-row grid reveal">
+        <div class="xp-meta"><p class="label">2016 — 2021</p></div>
+        <div class="xp-main">
+          <h3>B.E. Computer Science</h3>
+          <p class="xp-co" style="margin:0">Cambridge Institute of Technology</p>
+        </div>
+      </div>
+      <div class="xp-bot grid"><div class="bot" style="grid-column:1/4">robot 72px<br>focused<br>rides the spine</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 4 · IMPACT (dark) ═══════════ -->
+<section class="section section--dark" id="impact">
+  <div class="container">
+    <div class="impact-head reveal">
+      <div>
+        <p class="eyebrow">impact</p>
+        <h1>The numbers.</h1>
+      </div>
+      <div class="bot">robot 120px<br>surprised → thinking</div>
+    </div>
+
+    <div class="stats reveal--stagger reveal">
+      <div class="tile" style="--i:0"><p class="fig">5M+</p><p class="micro cap">daily api requests</p></div>
+      <div class="tile" style="--i:1"><p class="fig">3,000+</p><p class="micro cap">concurrent charger connections</p></div>
+      <div class="tile" style="--i:2"><p class="fig">12</p><p class="micro cap">person team led</p></div>
+      <div class="tile" style="--i:3"><p class="fig">20%</p><p class="micro cap">downtime reduced</p></div>
+      <div class="tile" style="--i:4"><p class="fig">30%</p><p class="micro cap">diagnostic accuracy gained</p></div>
+      <div class="tile" style="--i:4"><p class="fig">40%</p><p class="micro cap">user engagement lift</p></div>
+    </div>
+
+    <div class="skills reveal">
+      <hr class="rule">
+      <div class="skill-grid">
+        <div>
+          <h3>leadership &amp; execution</h3>
+          <p>team leadership · org restructuring · hiring · performance management · roadmap ownership · delivery planning · stakeholder management · operational excellence</p>
+        </div>
+        <div>
+          <h3>architecture</h3>
+          <p>distributed systems · microservices · event-driven architecture · cloud-native systems · high-availability design · system design · HLD · LLD</p>
+        </div>
+        <div>
+          <h3>ai &amp; automation</h3>
+          <p>ai agents · fine-tuning · email inbox automation · document data extraction · tampering detection · auto MRZ validation · BGV automation</p>
+        </div>
+        <div>
+          <h3>technology</h3>
+          <p>golang · node.js · angular · docker · terraform · apache kafka · websockets · aws ec2 · rds · alb · sqs · postgresql · mongodb</p>
+        </div>
+        <div>
+          <h3>observability &amp; devops</h3>
+          <p>dynatrace · grafana · ci/cd · production monitoring · performance optimization · kubernetes</p>
+        </div>
+      </div>
+      <p class="gb-note" style="color:var(--dark-muted)">·-separated mono lists, not 35 chips (I)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 5 · CONTACT ═══════════ -->
+<section class="section" id="contact">
+  <div class="container">
+    <p class="eyebrow">contact</p>
+    <div class="grid">
+      <div class="ct-pitch reveal">
+        <h1>Let's talk about the hard problem you're trying to solve.</h1>
+        <p class="body">Open to senior engineering management roles. Fastest way to reach me is email.</p>
+        <div class="cta">
+          <a class="btn btn--1" href="mailto:work@cg6.tech">email me</a>
+          <a class="btn btn--2" href="#">download résumé</a>
+        </div>
+      </div>
+      <div class="ct-chan reveal">
+        <div class="chan">
+          <a href="mailto:work@cg6.tech"><span class="k">email</span><span>work@cg6.tech</span></a>
+          <a href="tel:+919686889681"><span class="k">phone</span><span>+91 96868 89681</span></a>
+          <a href="https://cg6.tech"><span class="k">site</span><span>cg6.tech</span></a>
+          <a href="#"><span class="k">github</span><span>CG6-Tech</span></a>
+          <a href="#"><span class="k">linkedin</span><span>CG6-Tech</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="signoff reveal">
+      <hr class="rule" style="margin-bottom:var(--s-9)">
+      <div class="bot">robot 96px<br>content<br>breathe slow</div>
+      <p class="micro">Built by CG · Geist + Geist Mono · 2026</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ---- H: reveal, fires once ---- */
+const io = new IntersectionObserver((es)=>{
+  for (const e of es){
+    if (!e.isIntersecting) continue;
+    e.target.classList.add('is-in');
+    io.unobserve(e.target);
+  }
+},{threshold:.15, rootMargin:'0px 0px -10% 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---- nav becomes opaque only past the hero ---- */
+const nav = document.getElementById('nav');
+const hero = document.getElementById('top');
+new IntersectionObserver(([e])=>{
+  nav.classList.toggle('is-stuck', !e.isIntersecting);
+},{rootMargin:'-64px 0px 0px 0px'}).observe(hero);
+
+/* ---- greybox column ruler ---- */
+const ruler = document.getElementById('ruler'), rbtn = document.getElementById('rulerBtn');
+rbtn.addEventListener('click',()=>{
+  const on = ruler.classList.toggle('on');
+  rbtn.textContent = on ? 'hide grid' : 'show grid';
+});
+</script>
+</body>
+</html>
