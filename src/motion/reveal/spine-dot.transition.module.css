@@ -1,0 +1,10 @@
+/* ═══ REVEAL · transition · trigger: sequence (row opens) ═══
+   The spine dot fills orange when its row is dealt. A two-state change, so a
+   transition. Geometry of the dot lives with the section
+   (components/sections/Experience.module.css); only its fill moves here. */
+.dot::after{transition:background-color var(--t-4) var(--ease-out)}
+[data-open] .dot::after{background-color:var(--orange)}
+
+@media (prefers-reduced-motion:reduce){
+  .dot::after{transition:none!important}
+}

@@ -1,0 +1,4 @@
+.wm{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink);cursor:pointer;
+  padding:6px 0}
+.wm svg{height:19px;width:auto;display:block;overflow:visible}
+.dot{fill:var(--orange)}

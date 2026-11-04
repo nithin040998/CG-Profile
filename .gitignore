@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+test-results/
+playwright-report/
+
+# local memory-graph artifacts (Engram), not project files
+.engram/
+INDEX.md

@@ -1,0 +1,36 @@
+/* ═══ REVEAL · keyframes · trigger: sequence (the companion arrives) ═══
+   Experience rows opt OUT of the viewport reveal and are released one at a
+   time by the descent (motion/guide/descent.frame.ts), which sets data-open.
+   The row's own contents cascade in behind it, so arrival reads as the
+   mascot dealing the card rather than a block flipping on.
+
+   .track goes on the timeline wrapper, .row on each <article>. Children are
+   addressed by position — row > [meta, main] > items — so the cascade needs
+   no classes of its own inside the row. */
+.track .row{opacity:0;transform:translateY(18px)}
+.track .row[data-open]{animation:deal var(--t-5) var(--ease-out) both}
+
+.track .row > * > *{opacity:0;transform:translateY(8px)}
+.track .row[data-open] > * > *{animation:settle var(--t-4) var(--ease-out) both}
+
+/* meta column */
+.track .row[data-open] > :nth-child(1) > :nth-child(1){animation-delay:60ms}
+.track .row[data-open] > :nth-child(1) > :nth-child(2){animation-delay:120ms}
+/* main column */
+.track .row[data-open] > :nth-child(2) > :nth-child(1){animation-delay:90ms}
+.track .row[data-open] > :nth-child(2) > :nth-child(2){animation-delay:140ms}
+.track .row[data-open] > :nth-child(2) > :nth-child(3){animation-delay:190ms}
+.track .row[data-open] > :nth-child(2) > :nth-child(4){animation-delay:240ms}
+
+@keyframes deal{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:none}
+}
+@keyframes settle{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .track .row,.track .row > * > *{opacity:1!important;transform:none!important;animation:none!important}
+}

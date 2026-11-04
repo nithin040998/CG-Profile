@@ -1,0 +1,55 @@
+/* ═══ RESPOND · transition · trigger: pointer (hover) ═══
+   H decision 5 — the single most important rule in the motion phase:
+   NO transform on hover. No lift, no scale. Hairline + colour response only;
+   cards that lift are what make template portfolios look like templates.
+
+   Components compose these and set the TARGET via a custom property, so the
+   motion lives here and the palette stays with the component:
+     .fill      background   → var(--fill-to)        buttons 1/2
+     .hairline  border-color → var(--hairline-to)    tiles, chips, button 3
+     .ink       color        → var(--ink-to)         nav links, chips
+     .wash      background   → var(--wash-to)        contact rows
+     .underline 1px orange rule grows from the left  nav links
+     .tint      svg fill     → var(--tint-to)        wordmark dot (on .tintHost hover)
+
+   Every surface class composes ONE shared transition list (.respond). Two
+   classes that each declared `transition` would let whichever loaded later
+   silently delete the other's — chips need hairline AND ink at once. */
+.respond{
+  transition:background-color var(--respond-bg-t,var(--t-3)) var(--ease-out),
+             border-color var(--t-1) var(--ease-out),
+             color var(--t-1) var(--ease-out);
+}
+
+.fill{composes:respond}
+.fill:hover{background-color:var(--fill-to)}
+
+.hairline{composes:respond}
+.hairline:hover{border-color:var(--hairline-to,var(--orange))}
+
+.ink{composes:respond}
+.ink:hover,
+.inkHost:hover .ink{color:var(--ink-to,var(--ink))}
+
+.wash{composes:respond;--respond-bg-t:var(--t-1)}
+.wash:hover{background-color:var(--wash-to,var(--cream))}
+
+/* scaleX, not the prototype's width: H perf rule — transform + opacity only.
+   Identical on screen for a 1px rule. */
+.underline{position:relative}
+.underline::after{
+  content:"";position:absolute;left:0;bottom:var(--underline-y,12px);
+  height:1px;width:100%;background:var(--orange);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform var(--t-1) var(--ease-out);
+}
+.underline:hover::after{transform:scaleX(1)}
+
+.tint{transition:fill var(--t-3) var(--ease-out)}
+.tintHost:hover .tint{fill:var(--tint-to,var(--orange-lo))}
+
+/* H: under reduced motion colour changes stay (they are not motion) — they
+   just become instant */
+@media (prefers-reduced-motion:reduce){
+  .respond,.underline::after,.tint{transition:none!important}
+}

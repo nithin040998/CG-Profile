@@ -1,0 +1,42 @@
+.hero{min-height:88vh;display:flex;align-items:center;padding-block:var(--s-8) var(--s-9)}
+.hero .grid{align-items:center;width:100%}
+.name{grid-column:1/13;position:relative}
+.name .display{position:relative;z-index:1}
+
+/* The robot stands in the empty pocket to the RIGHT of "Gowda" and grazes the
+   tail of line 1 with its antennas only. Overlap is real (that IS the
+   composition) but it never occludes a letter — the name has to stay
+   readable, and it is long and unfamiliar to most readers.
+   SIZE IS NOT A TASTE CALL — it is the pocket. Measured, line 1 is 893px at
+   the 124px cap against 1072px of content width: the pocket right of it is
+   only ~179px (1440/1280), narrowing to ~147px at the 1024 breakpoint.
+   12.2vw capped at 176px tracks that pocket across the desktop range.
+   Anchored to the BOTTOM of the name block, not a % from the top, so it stays
+   level with "Gowda" instead of drifting into line 1 as the name reflows. */
+.bot{position:absolute;z-index:2;right:0;bottom:0;width:clamp(128px,12.2vw,176px)}
+
+.copy{grid-column:1/9;position:relative;z-index:3;margin-top:var(--s-7)}
+.copy .lead{margin-bottom:var(--s-7)}
+.meta{display:flex;gap:var(--s-3);flex-wrap:wrap;align-items:center;margin:0}
+.meta span:not(:last-child)::after{content:" ·";color:var(--ink-muted);opacity:.5}
+
+/* absolute against the initial containing block — the first screen's foot */
+.cue{position:absolute;bottom:var(--s-7);left:var(--page-pad)}
+
+@media (max-width:1023px){
+  /* md/sm: name FIRST (it is the headline), then robot, then copy. The
+     overlap is a desktop-only composition — stacked, it just needs to be
+     compact. */
+  .hero{min-height:0;padding-block:var(--s-7) var(--s-9)}
+  .hero .grid{gap:0}
+  .name{grid-column:1/7;grid-row:1}
+  .bot{
+    position:static;grid-column:1/7;grid-row:2;
+    width:160px;margin:var(--s-6) auto 0;justify-self:center;
+  }
+  .copy{grid-column:1/7;grid-row:3;margin-top:var(--s-7)}
+  .cue{display:none}
+}
+@media (max-width:639px){
+  .bot{width:132px;margin-top:var(--s-5)}
+}

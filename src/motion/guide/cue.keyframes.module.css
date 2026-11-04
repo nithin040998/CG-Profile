@@ -1,0 +1,11 @@
+/* ═══ GUIDE · keyframes · trigger: loop ═══
+   The hero's "scroll ↓" cue: a slow breath of opacity and 4px of drift. */
+.cue{animation:cue 2.6s var(--ease-out) infinite}
+@keyframes cue{
+  0%,100%{opacity:.35;transform:translateY(0)}
+  50%{opacity:.9;transform:translateY(4px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cue{animation:none!important}
+}

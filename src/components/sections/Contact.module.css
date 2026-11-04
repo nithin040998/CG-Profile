@@ -1,0 +1,23 @@
+.pitch{grid-column:1/7}
+.channels{grid-column:7/13}
+.pitch h1{margin-bottom:var(--s-4);max-width:18ch}
+.pitch .cta{margin-top:var(--s-7);margin-bottom:0}
+
+.chan{border:1px solid var(--line);border-radius:var(--r-2);overflow:hidden;background:var(--cream-2)}
+.chan a{
+  display:flex;align-items:center;gap:var(--s-5);min-height:52px;padding:0 var(--s-5);
+  text-decoration:none;color:var(--ink);font-size:13.5px;
+  --ink-to:var(--orange-text);   /* the key label warms on row hover */
+}
+.chan a + a{border-top:1px solid var(--line)}
+.k{flex:0 0 74px;font:400 10px/1 var(--font-mono);letter-spacing:.07em;color:var(--ink-muted)}
+
+.signoff{margin-top:var(--s-9);text-align:center}
+.signoff .signoffRule{margin-bottom:var(--s-9)}
+.footDock{width:96px;margin:0 auto}
+.signoff .signoffText{margin-top:var(--s-4)}
+
+@media (max-width:1023px){
+  .pitch,.channels{grid-column:1/7}
+  .channels{margin-top:var(--s-7)}
+}

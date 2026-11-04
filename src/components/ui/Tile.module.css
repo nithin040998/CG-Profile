@@ -1,0 +1,6 @@
+/* colours come from the surface roles, so the dark section needs no override */
+.tile{
+  background:var(--tile-bg);border:1px solid var(--tile-border);border-radius:var(--r-2);
+  padding:var(--s-5);
+  --hairline-to:var(--tile-hover);
+}

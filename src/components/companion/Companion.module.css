@@ -1,0 +1,12 @@
+/* The companion's static box. Its movement is motion/guide/glide. */
+.companion{
+  position:fixed;z-index:40;top:0;left:0;
+  width:var(--cw,150px);
+  /* an inline box would add a line-box descender of phantom height under the
+     svg, and every vertical centring would be off by half of it */
+  line-height:0;font-size:0;
+  will-change:transform;
+  pointer-events:none;   /* never blocks the content it floats over */
+}
+/* on dark surfaces only the bolt flips (robot colour contract) */
+.companion[data-surface="dark"]{--cg-bolt:#F6E7CE}

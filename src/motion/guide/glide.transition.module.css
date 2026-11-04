@@ -1,0 +1,24 @@
+/* ═══ GUIDE · transition · trigger: scroll ═══
+   The companion's movement between docks. JS (components/companion) writes
+   the target transform + --cw width; this eases toward it.
+
+   data-mode="docked" — glides dock-to-dock, 900ms morph ease.
+   data-mode="riding" — on the experience spine. NO transform transition on
+     purpose: the transform is recomputed every frame from the descent, and a
+     500ms ease would make it lag the scroll and swim. The per-frame recompute
+     IS the animation. Width still eases; it only changes between modes. */
+.glide{
+  transition:transform var(--t-glide,900ms) var(--ease-morph),
+             width var(--t-glide,900ms) var(--ease-morph),
+             opacity var(--t-4) var(--ease-out);
+}
+.glide[data-mode="riding"]{
+  transition:width var(--t-6) var(--ease-morph),opacity var(--t-4) var(--ease-out);
+}
+.glide[data-hidden]{opacity:0}
+/* pre-hydration / no JS: the companion is decorative, hide it until placed */
+.glide:not([data-placed]){opacity:0}
+
+@media (prefers-reduced-motion:reduce){
+  .glide{transition:none!important}
+}

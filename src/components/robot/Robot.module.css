@@ -1,0 +1,26 @@
+/* ── the robot's static structure. Every MOVING part lives in motion/express. ── */
+.robot{display:block;overflow:visible}
+.fluid{width:100%;height:auto;max-width:100%}
+
+/* TRANSFORM ANCHORS — the single most important rule for the robot. SVG
+   defaults to the user-space origin (0,0 = top-left), so without this every
+   rotate/scale pivots from the corner and the robot swings like a hinged
+   door. fill-box re-bases percentages to each element's own box, so 50% 50%
+   is the middle of the face. */
+.robot *{transform-box:fill-box}
+/* events + tilt pivot from the CENTRE of the face… */
+.outer,.tiltable{transform-origin:50% 50%}
+/* …only breathing pivots from the base (a chest rises upward) */
+.idle{transform-origin:50% 100%}
+
+.mouth{fill:none;stroke:var(--cg-mouth);stroke-width:1.6;stroke-linecap:round}
+/* proportional thickening so the curve survives small sizes */
+.s56 .mouth{stroke-width:1.6}
+.s40 .mouth{stroke-width:1.8}
+.s30 .mouth{stroke-width:2.1}
+.s22 .mouth{stroke-width:2.5}
+.s17 .mouth{stroke-width:2.9}
+
+.bolt{fill:var(--cg-bolt);opacity:0}
+/* on dark surfaces only the bolt flips */
+.onDark{--cg-bolt:#F6E7CE}

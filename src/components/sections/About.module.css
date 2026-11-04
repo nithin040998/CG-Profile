@@ -1,0 +1,23 @@
+.rail{grid-column:1/4}
+.main{grid-column:4/12}
+
+/* The dock is the robot's own width, not the rail's — a full-width dock
+   centres the bot in a 250px column, which reads as floating loose.
+   --s-5, not --s-7, is an OPTICAL correction: the viewBox is '0 -11 44 56'
+   and the head starts at y=13, so ~25px of a 96px-wide instance is antenna
+   headroom. 24px + 25px lands the perceived gap back on the 48px token. */
+.railBot{margin-top:var(--s-5);width:96px}
+
+.main .lead{margin-bottom:var(--s-5)}
+.thru{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-4);margin-top:var(--s-7)}
+.thru .tileBody{margin:var(--s-3) 0 0;font-size:13px;line-height:1.5}
+
+@media (max-width:1023px){
+  .rail,.main{grid-column:1/7}
+  .main{margin-top:var(--s-7)}
+  .rail{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-5)}
+  .rail .railBot{margin-top:0}
+}
+@media (max-width:639px){
+  .thru{grid-template-columns:1fr}
+}

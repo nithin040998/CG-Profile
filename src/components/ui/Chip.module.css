@@ -1,0 +1,7 @@
+.chip{
+  font:400 10px/1 var(--font-mono);letter-spacing:.07em;color:var(--muted);
+  border:1px solid var(--line);border-radius:var(--r-1);padding:7px 9px;
+  --hairline-to:var(--orange);
+  --ink-to:var(--ink);
+}
+.list{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-4)}

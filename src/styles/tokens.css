@@ -1,0 +1,59 @@
+/* ============================================================
+   CG PORTFOLIO — design tokens
+   Phase E (colour) + F (type) + G (grid) + H (motion), ported
+   verbatim from design/assets/landing.html + robot-lib.css.
+   ============================================================ */
+:root{
+  /* ── E: colour ── */
+  --cream:#F8EFDE; --cream-2:#F1E6D2; --hair:rgba(28,26,23,.13);
+  --ink:#1C1A17;   --ink-muted:#6B645A;
+  --orange:#F2673A; --orange-text:#B83F18; --orange-deep:#C9481F;
+  --orange-hi:#F87A4B; --orange-lo:#E85A2C;
+  --dark:#17140F; --dark-fg:#E8DFD0; --dark-muted:#9C9488; --orange-glow:#F2A05A;
+  --hair-dark:rgba(232,223,208,.14);
+
+  /* ── surface roles — what components actually read.
+     A dark section re-points these (styles/layout.module.css .dark), so no
+     component needs its own `.dark .x` override, and no override has to win a
+     specificity fight against a class from another CSS module. ── */
+  --muted:var(--ink-muted);
+  --line:var(--hair);
+  --eyebrow-fg:var(--ink-muted);
+  --focus:var(--orange-text);      /* H: orange fails 3:1 on cream, orange-text passes */
+  --tile-bg:var(--cream-2);
+  --tile-border:var(--hair);
+  --tile-hover:rgba(242,103,58,.4);
+
+  /* ── F: type (font families are injected by next/font in app/layout.tsx) ── */
+  --font-sans:var(--font-geist),ui-sans-serif,system-ui,sans-serif;
+  --font-mono:var(--font-geist-mono),ui-monospace,SFMono-Regular,Menlo,monospace;
+  --tracking-display:-.03em; --tracking-h:-.02em; --tracking-label:.09em;
+  --leading-body:1.68;
+
+  /* ── G: space ── */
+  --page-max:1200px; --page-pad:clamp(20px,5vw,64px);
+  --measure:600px;   --measure-lead:620px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
+  --gutter:24px; --r-1:3px; --r-2:6px; --r-3:10px;
+
+  /* ── H: motion — six easings, six durations. No ad-hoc curves (H decision 1).
+     Spring / jolt / quake are robot-only: UI never overshoots (H decision 2). ── */
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --ease-morph:cubic-bezier(.3,.7,.2,1);
+  --ease-breath:cubic-bezier(.4,0,.5,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-jolt:cubic-bezier(.3,1.5,.5,1);
+  --ease-quake:cubic-bezier(.36,.07,.19,.97);
+  --t-1:120ms; --t-2:160ms; --t-3:200ms; --t-4:340ms; --t-5:420ms; --t-6:500ms;
+
+  /* ── robot colour contract (robot-lib.css) ── */
+  --cg-orange:#F2673A;
+  --cg-orange-hi:#F87A4B;
+  --cg-orange-lo:#E85A2C;
+  --cg-orange-dp:#C9481F;
+  --cg-plate:#C9481F;
+  --cg-mouth:rgba(25,21,18,.42);   /* NEVER inverts — it sits on the face */
+  --cg-bolt:#241A12;               /* DOES invert — it sits outside the head */
+  --cg-lid:#E85A2C;
+}

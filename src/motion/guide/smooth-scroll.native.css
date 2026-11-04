@@ -1,0 +1,9 @@
+/* ═══ GUIDE · native · trigger: anchor navigation ═══
+   H decision 6: native smooth scroll, no scroll-hijacking library. Rejected
+   Locomotive/Lenis — they break the native scrollbar, Cmd+F scroll-into-view
+   and keyboard paging for a small perceived gain. Revisit at Phase K. */
+html{scroll-behavior:smooth}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}

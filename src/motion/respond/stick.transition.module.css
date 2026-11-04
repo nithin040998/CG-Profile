@@ -1,0 +1,16 @@
+/* ═══ RESPOND · transition · trigger: scroll (nav leaves the hero) ═══
+   The nav is transparent over the hero and turns opaque past it. data-stuck
+   is set by components/nav from an IntersectionObserver on the hero. */
+.stick{
+  transition:background-color var(--t-3) var(--ease-out),border-color var(--t-3) var(--ease-out);
+}
+.stick[data-stuck]{
+  background-color:rgba(248,239,222,.88);
+  -webkit-backdrop-filter:blur(8px) saturate(1.1);
+  backdrop-filter:blur(8px) saturate(1.1);
+  border-bottom-color:var(--hair);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .stick{transition:none!important}
+}

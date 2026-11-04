@@ -1,0 +1,61 @@
+/* ═══ EXPRESS · keyframes · trigger: loop ═══
+   The robot's idle life. Ported from robot-lib.css; every curve and duration
+   there is authoritative (H-motion.md).
+
+   Anchors matter: Robot.module.css sets transform-box:fill-box on every svg
+   child, so the percentages below are each element's OWN box. Without that,
+   SVG pivots from the user-space origin and the robot swings like a door. */
+
+/* breathe — scale from the BASE of the head, like a slow inhale */
+@keyframes breathe{
+  0%,100%{transform:scale(1)           translateY(0)}
+  45%    {transform:scale(1.035,1.045) translateY(-.5px)}
+  70%    {transform:scale(1.012,1.018) translateY(-.2px)}
+}
+.breathe{animation:breathe 5.6s var(--ease-breath) infinite;transform-origin:50% 100%}
+
+/* breathe-deep — more visible, for hero / large sizes */
+@keyframes breatheDeep{
+  0%,100%{transform:scale(1)          translateY(0)}
+  42%    {transform:scale(1.055,1.07) translateY(-1.1px)}
+  68%    {transform:scale(1.02,1.03)  translateY(-.4px)}
+}
+.breatheDeep{animation:breatheDeep 5.2s var(--ease-breath) infinite;transform-origin:50% 100%}
+
+/* float — pure translate, anchor irrelevant */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+.float{animation:float 4.4s ease-in-out infinite}
+
+/* blink — the lid sweeps DOWN from the top (never scaleY from centre) */
+@keyframes lid{0%,92%,100%{transform:translateY(-10px)}95%,97.5%{transform:translateY(0)}}
+.blink{animation:lid 5.2s ease-in-out infinite}
+/* the prototype's .cg-lid--slow only set a duration, so used alone it never
+   blinked; here it carries the whole animation */
+.blinkSlow{animation:lid 7.4s ease-in-out infinite}
+@keyframes lidDouble{
+  0%,84%,100%{transform:translateY(-10px)}
+  87%,88.5%{transform:translateY(0)}
+  90%{transform:translateY(-10px)}
+  92%,93.5%{transform:translateY(0)}
+}
+.blinkDouble{animation:lidDouble 6s ease-in-out infinite}
+
+/* antenna sway — pivots where the antennas MEET the head, so they bend like
+   whiskers instead of sliding sideways */
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(2.2deg)}}
+.sway{animation:sway 6.8s ease-in-out infinite;transform-origin:50% 100%}
+
+/* thinking bolt — two strikes per cycle */
+@keyframes strike{
+  0%,100%{opacity:0}
+  5%{opacity:1} 10%{opacity:.25} 15%{opacity:1} 22%{opacity:0}
+  56%{opacity:0} 59%{opacity:1} 63%{opacity:.2} 67%{opacity:1} 74%{opacity:0}
+}
+.strike{animation:strike 2.8s linear infinite}
+
+/* reduced motion: still present, just static — keeps its expression, loses
+   its loops; the bolt is simply there */
+@media (prefers-reduced-motion:reduce){
+  .breathe,.breatheDeep,.float,.blink,.blinkSlow,.blinkDouble,.sway{animation:none!important}
+  .strike{animation:none!important;opacity:.9!important}
+}

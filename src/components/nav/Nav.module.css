@@ -1,0 +1,28 @@
+/* ════════ 0 · NAV ════════ (the stuck background is motion/respond/stick) */
+.nav{
+  position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:center;
+  border-bottom:1px solid transparent;
+}
+.inner{display:flex;align-items:center;justify-content:space-between;gap:var(--s-5);width:100%}
+
+.links{display:flex;gap:var(--s-6);list-style:none;margin:0;padding:0}
+.link{
+  display:inline-flex;align-items:center;min-height:44px;
+  font:400 11px/1 var(--font-mono);letter-spacing:var(--tracking-label);
+  color:var(--ink-muted);text-decoration:none;
+  --underline-y:12px;
+}
+.active{color:var(--ink);padding-left:12px}
+.active::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--orange);
+}
+
+.right{display:flex;align-items:center;gap:var(--s-4)}
+.menu{display:none;background:none;border:0;padding:10px 0;cursor:pointer;
+  font:400 11px/1 var(--font-mono);letter-spacing:var(--tracking-label);color:var(--ink-muted)}
+
+@media (max-width:1023px){
+  .links{display:none}
+  .menu{display:inline-block}
+}

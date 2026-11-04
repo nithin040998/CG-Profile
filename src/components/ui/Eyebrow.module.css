@@ -1,0 +1,11 @@
+/* the eyebrow — dot hangs outside the column (G: optical alignment) */
+.eyebrow{
+  position:relative;padding-left:14px;margin:0 0 var(--s-3);
+  font:400 11px/1 var(--font-mono);letter-spacing:var(--tracking-label);color:var(--eyebrow-fg);
+}
+.eyebrow::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--orange);
+}
+
+.rule{border:0;border-top:1px solid var(--line);margin:0}

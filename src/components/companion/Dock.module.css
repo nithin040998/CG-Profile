@@ -1,0 +1,5 @@
+/* A dock MUST have real height: the companion fills the dock's box, so a
+   zero-height dock would park it half a robot above the reserved slot.
+   aspect-ratio 44/56 matches the svg viewBox, so the reserved box is exactly
+   the shape that lands in it — no vertical drift at any size. */
+.dock{visibility:hidden;pointer-events:none;aspect-ratio:44/56}

@@ -1,0 +1,49 @@
+/* ═══ EXPRESS · keyframes · trigger: event (one-shot) ═══
+   Gestures play on the robot's outer group and remove themselves after
+   their duration (motion/express/gesture.ts holds the ms table). All pivot
+   from the CENTRE of the face. */
+
+/* wobble — damped tilt, on click */
+@keyframes wobble{
+  0%{transform:rotate(0)} 18%{transform:rotate(-9deg)} 38%{transform:rotate(6deg)}
+  58%{transform:rotate(-4deg)} 76%{transform:rotate(2deg)} 100%{transform:rotate(0)}
+}
+.wobble{animation:wobble .9s var(--ease-quake);transform-origin:50% 50%}
+
+/* nod — agreement / acknowledgement */
+@keyframes nod{
+  0%,100%{transform:translateY(0) rotate(0)}
+  30%{transform:translateY(2px) rotate(1.5deg)}
+  60%{transform:translateY(-1px) rotate(-1deg)}
+}
+.nod{animation:nod .7s ease-in-out;transform-origin:50% 50%}
+
+/* shake — "no" / error */
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-2.5px)} 40%{transform:translateX(2.5px)}
+  60%{transform:translateX(-1.6px)} 80%{transform:translateX(1.6px)}
+}
+.shake{animation:shake .5s ease-in-out}
+
+/* jolt — the surprise reaction: quick pop up, then settle */
+@keyframes jolt{
+  0%{transform:translateY(0) scale(1)}
+  22%{transform:translateY(-4px) scale(1.06)}
+  48%{transform:translateY(1px) scale(.985)}
+  72%{transform:translateY(-1px) scale(1.006)}
+  100%{transform:translateY(0) scale(1)}
+}
+.jolt{animation:jolt .62s var(--ease-jolt);transform-origin:50% 50%}
+
+/* pop — mount / reveal, grows out from the centre */
+@keyframes pop{
+  0%{transform:scale(.72) translateY(6px);opacity:0}
+  60%{transform:scale(1.04) translateY(-1px);opacity:1}
+  100%{transform:scale(1) translateY(0);opacity:1}
+}
+.pop{animation:pop .5s var(--ease-spring);transform-origin:50% 50%}
+
+@media (prefers-reduced-motion:reduce){
+  .wobble,.nod,.shake,.jolt,.pop{animation:none!important}
+}

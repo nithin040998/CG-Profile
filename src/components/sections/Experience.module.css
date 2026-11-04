@@ -1,0 +1,32 @@
+/* the companion rides the spine inside here, so this is its containing block */
+.xp{margin-top:var(--s-8);position:relative}
+.row + .row{margin-top:var(--s-9)}
+.meta{grid-column:1/4}
+.main{grid-column:4/13;position:relative}
+
+/* the spine — 1px hairline in the col3/col4 gutter, the only vertical rule */
+.main::before{
+  content:"";position:absolute;left:calc(var(--gutter) / -2);top:7px;
+  bottom:calc(var(--s-9) * -1);border-left:1px solid var(--line);
+}
+.row:last-of-type .main::before{bottom:0}
+/* the dot. Its fill on reveal is motion/reveal/spine-dot. */
+.main::after{
+  content:"";position:absolute;left:calc(var(--gutter) / -2 - 3.5px);top:7px;
+  width:8px;height:8px;border-radius:50%;background-color:var(--hair);
+}
+
+.main h2{margin-bottom:var(--s-1)}
+.co{color:var(--muted);margin:0 0 var(--s-4)}
+.main .coMinor{margin:0}
+.main ul{margin:0;padding-left:18px;max-width:var(--measure);color:var(--muted)}
+.main li{margin-bottom:var(--s-2)}
+.main li::marker{color:var(--orange)}
+.meta .own{display:inline-block;margin-top:var(--s-4);max-width:100%;white-space:normal;line-height:1.5}
+
+@media (max-width:1023px){
+  .meta,.main{grid-column:1/7}
+  .main{margin-top:var(--s-4);padding-left:20px}
+  .main::before{left:0;top:0}
+  .main::after{left:-3.5px;top:0}
+}

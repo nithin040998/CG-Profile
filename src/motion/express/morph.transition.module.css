@@ -1,0 +1,22 @@
+/* ═══ EXPRESS · transition · trigger: state (expression change, gaze write) ═══
+   The robot's in-between motion: the mouth curve morphing between
+   expressions, the pupils / mouth drifting toward a gaze target, the head
+   tilting. Values are written by Robot.tsx; these only ease them. */
+
+/* mouth — one constant shade, only the curve changes. The <path> is kept
+   across expressions, so `d` genuinely morphs (Chromium, Firefox; Safari
+   snaps). */
+.mouth{transition:d var(--t-5) var(--ease-morph)}
+
+/* gaze drift */
+.pupil{transition:transform var(--t-2) ease-out}
+.drift{transition:transform var(--t-3) ease-out}
+
+/* head tilt — expression tilt, gaze tilt, hover tilt. Spring is robot-only. */
+.tilt{transition:transform var(--t-6) var(--ease-spring)}
+.hoverTilt:hover .tilt,
+.hoverTilt:focus-visible .tilt{transform:rotate(-8deg) translateY(-3px)}
+
+@media (prefers-reduced-motion:reduce){
+  .mouth,.pupil,.drift,.tilt{transition:none!important}
+}

@@ -1,0 +1,13 @@
+/* ── F: type roles ── */
+.display{
+  font-size:clamp(40px,10.5vw,124px);font-weight:600;
+  letter-spacing:var(--tracking-display);line-height:.96;margin:0;
+}
+.lead{font-size:clamp(19px,2vw,22px);font-weight:500;letter-spacing:-.02em;
+  line-height:1.44;max-width:var(--measure-lead);margin:0}
+.body{max-width:var(--measure);color:var(--muted);margin:0}
+.label{font:400 11px/1 var(--font-mono);letter-spacing:var(--tracking-label);color:var(--muted)}
+.micro{font:400 10px/1.5 var(--font-mono);letter-spacing:.07em;color:var(--muted)}
+.fig{font-size:clamp(31px,4vw,40px);font-weight:600;letter-spacing:-.03em;line-height:1;margin:0}
+/* the ONE punchline word */
+.mark{color:var(--orange-text);font-weight:600}

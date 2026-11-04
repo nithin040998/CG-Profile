@@ -1,0 +1,19 @@
+/* ── element defaults. Deliberately no p/ul margin reset: the prototype keeps
+   browser margins on bare <p>s (labels in tiles rely on them). ── */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--cream); color:var(--ink);
+  font:400 14px/var(--leading-body) var(--font-sans);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+::selection{background:var(--orange);color:var(--ink)}
+
+h1,h2,h3{margin:0;font-weight:600;line-height:1.16;letter-spacing:var(--tracking-h)}
+h1{font-size:clamp(28px,3.4vw,34px)}
+h2{font-size:22px}
+h3{font-size:16px;letter-spacing:-.012em;line-height:1.3}
+
+/* H: focus is non-negotiable. --focus is re-pointed per surface. */
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:var(--r-1)}

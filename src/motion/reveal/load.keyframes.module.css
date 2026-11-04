@@ -1,0 +1,19 @@
+/* ═══ REVEAL · keyframes · trigger: page load ═══
+   H load sequence: name → robot → tagline → meta → CTA, then (JS, at 700ms)
+   the robot's `looking` glance at the name. Pure CSS: it runs from first
+   paint and needs no hydration. Step 2 is the robot's slot. */
+.load{opacity:0;transform:translateY(10px);
+  animation:load var(--t-5) var(--ease-out) forwards}
+@keyframes load{to{opacity:1;transform:none}}
+
+/* after .load in this file, so the delay wins over the shorthand's reset */
+.s1{animation-delay:0ms}
+.s2{animation-delay:120ms}
+.s3{animation-delay:260ms}
+.s4{animation-delay:380ms}
+.s5{animation-delay:460ms}
+
+/* reduced motion — final state, never left invisible */
+@media (prefers-reduced-motion:reduce){
+  .load{opacity:1!important;transform:none!important;animation:none!important}
+}

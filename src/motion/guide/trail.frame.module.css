@@ -1,0 +1,14 @@
+/* ═══ GUIDE · frame · trigger: sequence ═══
+   The orange line the descent leaves on the spine. ONE element on the
+   timeline (not per row) so the fill is continuous across the gaps between
+   rows. trail.frame.ts sizes it and grows scaleY from the top every frame —
+   transform-only, so it stays on the compositor. */
+.trail{
+  position:absolute;top:7px;width:1px;background:var(--orange);
+  transform-origin:top;transform:scaleY(0);
+  opacity:.5;pointer-events:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .trail{display:none}
+}
